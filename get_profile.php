@@ -4,7 +4,7 @@ header('content-type: application/json');
 $email = mysqli_real_escape_string($conn, $_GET['email']);
 $datauser = array();
 $getstatus = 0;
-$sql = "SELECT * FROM tbl~ WHERE email = '" . $email . "'";
+$sql = "SELECT * FROM tbl_pelanggan WHERE email = '" . $email . "'";
 $hasil = mysqli_query($conn, $sql);
 $data = mysqli_fetch_object($hasil);
 if (!$data) {
