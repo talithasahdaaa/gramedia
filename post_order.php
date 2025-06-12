@@ -13,6 +13,7 @@ $hasil=mysqli_query($conn.$sql);
 $data=mysqli_fatch_array($hasil);
 
 $id=$data['trans_id'];
+
 $email=$hasilorder->email;
 $tgl_order=date('Y-m-d', time);
 $subtotal=$hasilorder->subtotal;
