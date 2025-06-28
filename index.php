@@ -1,7 +1,15 @@
 <?php
 include "koneksimysql.php";
+
 // Tambah data
 if (isset($_POST['btnAdd'])) {
+    $fotoName = null;
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+        $fotoName = uniqid() . '_' . basename($_FILES['foto']['name']);
+        move_uploaded_file($_FILES['foto']['tmp_name'], 'img/' . $fotoName);
+    } else {
+        $fotoName = $_POST['foto'] ?? '';
+    }
     $stmt = $conn->prepare("INSERT INTO tbl_product (kode, merk, kategori, satuan, hargabeli, diskonbeli, hargapokok, hargajual, diskonjual, stok, foto, deskripsi, view_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param(
         "ssssddddddissi",
@@ -15,7 +23,7 @@ if (isset($_POST['btnAdd'])) {
         $_POST['hargajual'],
         $_POST['diskonjual'],
         $_POST['stok'],
-        $_POST['foto'],
+        $fotoName,
         $_POST['deskripsi'],
         $_POST['view_count']
     );
@@ -26,6 +34,11 @@ if (isset($_POST['btnAdd'])) {
 
 // Update data
 if (isset($_POST['btnUpdate'])) {
+    $fotoName = $_POST['foto_lama'];
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+        $fotoName = uniqid() . '_' . basename($_FILES['foto']['name']);
+        move_uploaded_file($_FILES['foto']['tmp_name'], 'img/' . $fotoName);
+    }
     $stmt = $conn->prepare("UPDATE tbl_product SET merk=?, kategori=?, satuan=?, hargabeli=?, diskonbeli=?, hargapokok=?, hargajual=?, diskonjual=?, stok=?, foto=?, deskripsi=?, view_count=? WHERE kode=?");
     $stmt->bind_param(
         "sssddddddssis",
@@ -38,7 +51,7 @@ if (isset($_POST['btnUpdate'])) {
         $_POST['hargajual'],
         $_POST['diskonjual'],
         $_POST['stok'],
-        $_POST['foto'],
+        $fotoName,
         $_POST['deskripsi'],
         $_POST['view_count'],
         $_POST['kode']
@@ -103,7 +116,12 @@ $result = $conn->query("SELECT * FROM tbl_product");
                         <td><?= $row['hargajual'] ?></td>
                         <td><?= $row['diskonjual'] ?></td>
                         <td><?= $row['stok'] ?></td>
-                        <td><?= $row['foto'] ?></td>
+                        <td>
+                            <?php if ($row['foto']): ?>
+                                <img src="img/<?= $row['foto'] ?>" width="60" alt="foto">
+                            <?php endif; ?>
+                            <div><?= $row['foto'] ?></div>
+                        </td>
                         <td><?= $row['deskripsi'] ?></td>
                         <td><?= $row['view_count'] ?></td>
                         <td>
@@ -117,13 +135,14 @@ $result = $conn->query("SELECT * FROM tbl_product");
                     <!-- Modal Edit -->
                     <div class="modal fade" id="modalEdit<?= $row['kode'] ?>" tabindex="-1">
                         <div class="modal-dialog">
-                            <form method="post">
+                            <form method="post" enctype="multipart/form-data">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5>Edit Produk</h5>
                                     </div>
                                     <div class="modal-body">
                                         <input type="hidden" name="kode" value="<?= $row['kode'] ?>">
+                                        <input type="hidden" name="foto_lama" value="<?= $row['foto'] ?>">
                                         <div class="form-group"><label>Merk</label><input type="text" name="merk"
                                                 class="form-control" value="<?= $row['merk'] ?>"></div>
                                         <div class="form-group"><label>Kategori</label><input type="text" name="kategori"
@@ -147,8 +166,13 @@ $result = $conn->query("SELECT * FROM tbl_product");
                                         </div>
                                         <div class="form-group"><label>Stok</label><input type="number" name="stok"
                                                 class="form-control" value="<?= $row['stok'] ?>"></div>
-                                        <div class="form-group"><label>Foto</label><input type="text" name="foto"
-                                                class="form-control" value="<?= $row['foto'] ?>"></div>
+                                        <div class="form-group">
+                                            <label>Foto</label>
+                                            <input type="file" name="foto" class="form-control-file">
+                                            <?php if ($row['foto']): ?>
+                                                <div class="mt-2"><img src="img/<?= $row['foto'] ?>" width="80"></div>
+                                            <?php endif; ?>
+                                        </div>
                                         <div class="form-group"><label>Deskripsi</label><textarea name="deskripsi"
                                                 class="form-control"><?= $row['deskripsi'] ?></textarea></div>
                                         <div class="form-group"><label>View Count</label><input type="number"
@@ -171,7 +195,7 @@ $result = $conn->query("SELECT * FROM tbl_product");
     <!-- Modal Add -->
     <div class="modal fade" id="modalAdd" tabindex="-1">
         <div class="modal-dialog">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5>Tambah Produk</h5>
@@ -197,7 +221,9 @@ $result = $conn->query("SELECT * FROM tbl_product");
                                 name="diskonjual" class="form-control"></div>
                         <div class="form-group"><label>Stok</label><input type="number" name="stok"
                                 class="form-control"></div>
-                        <div class="form-group"><label>Foto</label><input type="text" name="foto" class="form-control">
+                        <div class="form-group">
+                            <label>Foto</label>
+                            <input type="file" name="foto" class="form-control-file">
                         </div>
                         <div class="form-group"><label>Deskripsi</label><textarea name="deskripsi"
                                 class="form-control"></textarea></div>
