@@ -1,9 +1,5 @@
 <?php
-// Koneksi database
-$conn = new mysqli("localhost", "root", "", "androidtalita");
-if ($conn->connect_error)
-    die("Koneksi gagal: " . $conn->connect_error);
-
+include "koneksimysql.php";
 // Tambah data
 if (isset($_POST['btnAdd'])) {
     $stmt = $conn->prepare("INSERT INTO tbl_product (kode, merk, kategori, satuan, hargabeli, diskonbeli, hargapokok, hargajual, diskonjual, stok, foto, deskripsi, view_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
