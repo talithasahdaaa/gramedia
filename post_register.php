@@ -10,16 +10,22 @@ $getstatus = 0;
 $getresult = 0;
 $message = "";
 
+// ====== PERUBAHAN DIMULAI DI SINI ======
+// [1] Hapus/Modifikasi bagian pengecekan user existing (opsional)
 $sql = "SELECT * FROM tbl_pelanggan WHERE email='$email'";
 $hasil = mysqli_query($conn, $sql);
 
 if (mysqli_fetch_object($hasil)) {
-    $getstatus = 0; // pelanggan sudah ada 
+    $getstatus = 0;
     $message = "User sudah ada";
 } else {
-    $getstatus = 1;
+    // [2] Ini bagian yang diubah - enkripsi password
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    
     $sql = "INSERT INTO tbl_pelanggan (nama, email, password) 
-            VALUES('$nama', '$email', MD5('$password'))";
+            VALUES('$nama', '$email', '$password_hash')";
+    // ====== PERUBAHAN SELESAI ======
+
     $hasil = mysqli_query($conn, $sql);
 
     if ($hasil) {
@@ -36,3 +42,4 @@ echo json_encode(array(
     'result' => $getresult,
     'message' => $message
 ));
+?>
