@@ -39,4 +39,3 @@ if (!$hasil) {
 }
 
 echo json_encode(array('result' => $getstatus, 'data' => $datauser));
-?>

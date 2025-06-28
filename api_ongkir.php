@@ -1,4 +1,5 @@
 <?php
+
 $origin = $_POST['origin'];
 $destination = $_POST['destination'];
 $weight = $_POST['weight'];
@@ -14,7 +15,7 @@ curl_setopt_array($curl, array(
     CURLOPT_TIMEOUT => 30,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => "POST",
-    CURLOPT_POSTFIELDS => "origin=$origin&destination=$destination&weight=$weight&courier=$courier",
+    CURLOPT_POSTFIELDS => "origin=501&destination=114&weight=1700&courier=jne",
     CURLOPT_HTTPHEADER => array(
         "content-type: application/x-www-form-urlencoded",
         "key: 62db7f33e85cc733340e55a3e7c49ded"
@@ -27,7 +28,7 @@ $err = curl_error($curl);
 curl_close($curl);
 
 if ($err) {
-    echo "CURL Error #: " . $err;
+    echo "cURL Error #:" . $err;
 } else {
     echo $response;
 }

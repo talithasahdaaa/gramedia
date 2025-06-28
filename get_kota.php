@@ -1,11 +1,17 @@
 <?php
+header('Content-Type: application/json');
+
+$province_id = isset($_GET['province_id']) ? $_GET['province_id'] : ''; // Tangkap province_id dari URL
 
 $curl = curl_init();
 
-$province = $_GET['province_id'];
+$url = "https://api.rajaongkir.com/starter/city";
+if (!empty($province_id)) {
+    $url .= "?province=" . $province_id; // Tambahkan parameter province jika ada
+}
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province=$province",
+    CURLOPT_URL => $url, // Gunakan URL yang sudah dimodifikasi
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => "",
     CURLOPT_MAXREDIRS => 10,
@@ -19,11 +25,10 @@ curl_setopt_array($curl, array(
 
 $response = curl_exec($curl);
 $err = curl_error($curl);
-
 curl_close($curl);
 
 if ($err) {
-    echo "CURL Error #:" . $err;
+    echo json_encode(['error' => 'cURL Error #: ' . $err]);
 } else {
     echo $response;
 }

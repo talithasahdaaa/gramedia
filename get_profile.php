@@ -18,7 +18,8 @@ if (!$data) {
         'kota' => $data->kota,
         'provinsi' => $data->provinsi,
         'kodepos' => $data->kodepos,
-        'telp' => $data->telp
+        'telp' => $data->telp,
+        'foto' => $data->foto,
     );
 }
 echo json_encode(array('result' => $getstatus, 'data' => $datauser));
