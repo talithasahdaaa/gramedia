@@ -6,8 +6,9 @@
 // define('password', '');
 // define('database', 'androidtalita');
 
- menggunakan hosting
- define('host', 'localhost');
+ 
+ // menggunakan hosting
+define('host', 'localhost');
 define('user', 'androidtalita');
 define('password', 'Talita123');
 define('database', 'androidtalita');
